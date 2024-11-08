@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Stable Diffusion App</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: row;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #282c34;
+            /* Dark background */
+            color: #abb2bf;
+            /* Light text color */
+            font-family: sans-serif;
+        }
+
+        .input-container {
+            width: 30%;
+            padding: 20px;
+            background-color: #353b45;
+            /* Slightly lighter panel background */
+            border-right: 1px solid #4b5263;
+            /* Subtle separator */
+        }
+
+        .image-container {
+            width: 70%;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        img {
+            max-width: 100%;
+            max-height: 100%;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            /* Image shadow */
+        }
+
+        label {
+            display: block;
+            /* Make labels stack above inputs */
+            margin-bottom: 5px;
+            color: #c678dd;
+            /* Purple labels */
+        }
+
+        textarea,
+        select,
+        button {
+            width: calc(100% - 10px);
+            /* Full width inputs */
+            padding: 8px;
+            margin-bottom: 10px;
+            background-color: #3f4551;
+            /* Darker input background */
+            border: 1px solid #4b5263;
+            color: #abb2bf;
+            border-radius: 4px;
+
+        }
+
+
+        button {
+            background-color: #c678dd;
+            /* Purple submit button */
+            color: #282c34;
+            /* Dark text on button */
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            /* Smooth hover effect */
+        }
+
+        button:hover {
+            background-color: #be50d1;
+            /* Slightly darker purple on hover */
+
+        }
+
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+
+            .input-container,
+            .image-container {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid #4b5263;
+                /* Separator on mobile */
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="input-container">
+        <form method="POST" id="main_form">
+            <label for="model_select">Model:</label><br>
+            <select id="model_select" name="model_select">
+                <option value="model1">Model 1</option>
+                <option value="model2">Model 2</option>
+                <option value="model3">Model 3</option>
+                <!-- Add more options as needed -->
+            </select><br><br>
+            <label for="vae_select">VAE</label><br>
+            <select id="vae_select" name="vae_select">
+                <option value="vae1">VAE 1</option>
+                <option value="vae2">VAE 2</option>
+                <option value="vae3">VAE 3</option>
+                <!-- Add more options as needed -->
+            </select><br><br>
+
+            <label for="sample_select">Sampler</label><br>
+            <select id="sample_select" name="sample_select">
+                <option value="samp1">Sampler 1</option>
+                <option value="samp2">Sampler 2</option>
+                <option value="samp3">Sampler 3</option>
+                <!-- Add more options as needed -->
+            </select><br><br>
+
+            <label for="prompt">Prompt:</label><br>
+            <textarea id="prompt" name="prompt" rows="4"
+                cols="50">HDR photo of stunning woman, spiral curls, long auburn hair, some freckles, beautiful low cut blouse, long skirt, sitting on a chair in a dark room, amazing smile, perfect eyes . High dynamic range, vivid, rich details, clear shadows and highlights, realistic, intense, enhanced contrast, highly detailed</textarea><br><br>
+
+            <label for="negative_prompt">Negative Prompt:</label><br>
+            <textarea id="negative_prompt" name="negative_prompt" rows="4"
+                cols="50">worst quality, low quality, illustration, 3d, 2d, painting, cartoons, sketch, dull, blurry, watermark, low quality</textarea><br><br>
+
+            <label for="slider1">Steps</label>
+            <input type="range" id="slider1" name="slider1" min="1" max="50" value="25">
+
+            <span id="slider1-value">25</span>
+
+            <label for="slider2">CFG</label>
+            <input type="range" id="slider2" name="slider2" min="1.0" max="20.0" step="0.1" value="10.0">
+
+            <span id="slider2-value">12.5</span>
+
+            <script>
+                const slider1 = document.getElementById('slider1');
+                const slider1Value = document.getElementById('slider1-value');
+
+                slider1.addEventListener('input', (e) => {
+                    slider1Value.textContent = e.target.value;
+                });
+
+                const slider2 = document.getElementById('slider2');
+                const slider2Value = document.getElementById('slider2-value');
+
+                slider2.addEventListener('input', (e) => {
+                    slider2Value.textContent = e.target.value;
+                });
+            </script>
+
+
+            <button type="submit">Save</button>
+
+            <script>
+                if (window.history.replaceState) {
+                    window.history.replaceState(null, null, window.location.href);
+                }
+            </script>
+
+        </form>
+    </div>
+    <div class="image-container">
+        {% if generated_image %}
+        <img src="{{ generated_image }}" alt="Generated Image">
+        {% endif %}
+    </div>
+</body>
+
+</html>
